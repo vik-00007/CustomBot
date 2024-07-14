@@ -17,26 +17,34 @@ model = genai.GenerativeModel("gemini-pro")
 
 def get_gemini_response(question, image=None):
     predefined_responses = {
-        "who are you": "I am a Chatbot created by SUN.",
-        "describe yourself": "I am an AI-powered chatbot created by SUN to assist with various tasks and provide information.",
-        "tell me about yourself": "I am a chatbot developed by SUN, designed to help you with queries and provide useful information.",
+        "who are you": "I am a Dino Ai Chatbot created by SUN.",
+        "Who are you": "I am a Dino Ai Chatbot created by SUN.",
+        "describe yourself": "I am an AI-powered chatbot (Dino) created by SUN to assist with various tasks and provide information.",
+        "tell me about yourself": "I am a chatbot (Dino) developed by SUN, designed to help you with queries and provide useful information.",
+        "tell me yourself":"I am a chatbot developed by SUN, designed to help you with queries and provide useful information.",
         "who is anirban tung": "Anirban is an Indian boy, known as GAMLA😁",
+        "who is Anirban Tung": "Anirban is an Indian boy, known as GAMLA😁",
         "who is md ayan sk": "Ayan is an Indian boy, who always rides a bike over 100 km/h speed.😁",
+        "who is Md Ayan Sk": "Ayan is an Indian boy, who always rides a bike over 100 km/h speed.😁",
+        "who is md ayan shaik": "Ayan is an Indian boy, who always rides a bike over 100 km/h speed.😁",
+        "who is Md Ayan Shaik": "Ayan is an Indian boy, who always rides a bike over 100 km/h speed.😁",
         "who is srijan hudait": "Srijan Hudait is an Indian boy, who is known as Rising Star.😁",
-        "who is arijit jana": "Arijit Jana is an Indian boy who fell in love with Susmita.😁"
+        "who is Srijan Hudait": "Srijan Hudait is an Indian boy, who is known as Rising Star.😁",
+        "who is arijit jana": "Arijit Jana is an Indian extrovert boy who fell in love with Susmita.😁",
+        "who is Arijit Jana": "Arijit Jana is an Indian extrovert boy who fell in love with Susmita.😁"
 
     }
     
     question_lower = question.lower()
     
     if question_lower in predefined_responses:
-        return predefined_responses[question_lower]
+        return "🤖 "+predefined_responses[question_lower]
     else:
         if image:
             response = model.generate_content([question, image])
         else:
             response = model.generate_content(question)
-        return response.text
+        return "🤖 "+response.text
 
 
 
@@ -231,6 +239,7 @@ st.markdown("""
             justify-content: center;
             margin-top: 10px;
         }
+  
     </style>
 """, unsafe_allow_html=True)
 
@@ -302,23 +311,24 @@ if "chat_history" in st.session_state:
 
 # Center-aligned text input box
 st.markdown("<div class='chat-input-container'>", unsafe_allow_html=True)
-st.markdown("<p style='color: black;'>👽Ask me anything...</p>", unsafe_allow_html=True)
+st.markdown("<p style='color: black;'>🤖Hello! I am Dino AI, Ask me anything...</p>", unsafe_allow_html=True)
 st.text_input("👇👇👇",key="input", on_change=handle_input, placeholder="Type your question here...", help=" Type your question here ")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Buttons below the input box
 st.markdown("<div class='chat-buttons'>", unsafe_allow_html=True)
-col1, col2 = st.columns([1, 6])
-with col1:
-    st.button("Ask the question", on_click=handle_input)
+col2, col3 = st.columns([1,10])
 with col2:
+    st.button("ASK", on_click=handle_input)
+with col3:
     st.button("Clear Chat", on_click=clear_history)
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Sidebar for additional functionalities
 # Sidebar for additional functionalities
 with st.sidebar:
+    
     st.header("Google Search")
     search_query = st.text_input("Enter your query:")
     if st.button("Search"):
@@ -426,26 +436,53 @@ with st.sidebar:
 
     # Function to convert units
     def convert_units(value, from_unit, to_unit):
-        if from_unit == "Meter" and to_unit == "Kilometer":
-            return value / 1000
-        elif from_unit == "Meter" and to_unit == "Centimeter":
-            return value * 100
-        elif from_unit == "Meter" and to_unit == "Feet":
-            return value * 3.281
-        elif from_unit == "Meter" and to_unit == "Inch":
-            return value * 39.37
-        elif from_unit == "Meter" and to_unit == "Millimeter":
-            return value * 1000
-        elif from_unit == "Kilometer" and to_unit == "Meter":
-            return value * 1000
-        elif from_unit == "Centimeter" and to_unit == "Meter":
-            return value / 100
-        elif from_unit == "Feet" and to_unit == "Meter":
-            return value / 3.281
-        elif from_unit == "Inch" and to_unit == "Meter":
-            return value / 39.37
-        elif from_unit == "Millimeter" and to_unit == "Meter":
-            return value / 1000
+        conversion_factors = {
+            "Meter": {
+                "Kilometer": 0.001,
+                "Centimeter": 100,
+                "Feet": 3.281,
+                "Inch": 39.37,
+                "Millimeter": 1000
+            },
+            "Kilometer": {
+                "Meter": 1000,
+                "Centimeter": 100000,
+                "Feet": 3281,
+                "Inch": 39370,
+                "Millimeter": 1000000
+            },
+            "Centimeter": {
+                "Meter": 0.01,
+                "Kilometer": 0.00001,
+                "Feet": 0.03281,
+                "Inch": 0.3937,
+                "Millimeter": 10
+            },
+            "Feet": {
+                "Meter": 0.3048,
+                "Kilometer": 0.0003048,
+                "Centimeter": 30.48,
+                "Inch": 12,
+                "Millimeter": 304.8
+            },
+            "Inch": {
+                "Meter": 0.0254,
+                "Kilometer": 0.0000254,
+                "Centimeter": 2.54,
+                "Feet": 0.08333,
+                "Millimeter": 25.4
+            },
+            "Millimeter": {
+                "Meter": 0.001,
+                "Kilometer": 0.000001,
+                "Centimeter": 0.1,
+                "Feet": 0.003281,
+                "Inch": 0.03937
+            }
+        }
+
+        if from_unit in conversion_factors and to_unit in conversion_factors[from_unit]:
+            return value * conversion_factors[from_unit][to_unit]
         else:
             return "Conversion not supported"
 
@@ -466,22 +503,22 @@ with st.sidebar:
 
 
 
-    import webbrowser
+    # import webbrowser
 
-    # Function to open URLs
-    def open_url(url):
-        webbrowser.open(url, new=2)  # new=2 opens the URL in a new tab
+    # # Function to open URLs
+    # def open_url(url):
+    #     webbrowser.open(url, new=2)  # new=2 opens the URL in a new tab
 
-    # Sidebar section for AI Tools and buttons
-    st.sidebar.header("Other AI Tools")
+    # # Sidebar section for AI Tools and buttons
+    # st.sidebar.header("Other AI Tools")
 
-    # Button for Chat GPT
-    if st.sidebar.button("Chat GPT"):
-        open_url("https://openai.com/chatgpt/")
+    # # Button for Chat GPT
+    # if st.sidebar.button("Chat GPT"):
+    #     open_url("https://openai.com/chatgpt/")
 
-    # Button for Claude AI
-    if st.sidebar.button("Claude AI"):
-        open_url("https://claude.ai/new")
+    # # Button for Claude AI
+    # if st.sidebar.button("Claude AI"):
+    #     open_url("https://claude.ai/new")
     
 
 
